@@ -45,8 +45,7 @@ $.ajax({
     	console.log("title:", title, "artist:", artist);
 
         // change song display
-        $("#song-info").html("<h1>" + title + "</h1>" + \
-            "<h1>" + artist + "</h1>"  );
+        $("#song-info").html("<h1>" + title + "</h1>" + "<h1>" + artist + "</h1>"  );
     },
     error : function(code, message){
         // Handle error here
