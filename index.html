@@ -30,6 +30,8 @@ $.ajax({
     dataType : 'jsonp',
     success : function(data) {
     	console.log("success! data fetched:", data);
+    	var firstTrack = data.recenttracks.track[0];
+    	console.log("first track is:", firstTrack);
     },
     error : function(code, message){
         // Handle error here
