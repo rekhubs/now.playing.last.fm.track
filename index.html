@@ -34,7 +34,7 @@ $.ajax({
     	var firstTrack = data.recenttracks.track[0];
     	console.log("first track is:", firstTrack);
     	
-    	var ifPlaying = firstTrack["@attr"];
+    	var ifPlaying = firstTrack['@attr'];
     	console.log("if playing:", ifPlaying);
     	
         var title = firstTrack.name;
