@@ -37,8 +37,8 @@ $.ajax({
     	var ifPlaying = firstTrack["@attr"];
     	console.log("if playing:", ifPlaying);
     	
+        var title = firstTrack.name;
     	var artist = firstTrack.artist["#text"];
-    	var title = fristTrack.name;
     	console.log("title:", title, "artist:", artist);
     },
     error : function(code, message){
