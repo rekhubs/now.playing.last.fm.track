@@ -18,6 +18,24 @@
 <script type="text/javascript">
 console.log("hi, i'm from embedded js tag in index.html");
 console.log("jquery to get h1:",  $("h1")[0] );
+
+$.ajax({
+    type : 'POST',
+    url : 'http://ws.audioscrobbler.com/2.0/',
+    data : 'method=user.getrecenttracks&' +
+           'user=ralph4&' +
+           'api_key=57ee3318536b23ee81d6b27e36997cde&' +
+           'format=json',
+    dataType : 'jsonp',
+    success : function(data) {
+    	console.log("success! data fetched:", data);
+    },
+    error : function(code, message){
+        // Handle error here
+        console.log("error! error code:", code, ";   error message:", message);
+    }
+});
+
 </script>
 
 </html>
