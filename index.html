@@ -64,7 +64,7 @@
 
                 // url: "http://www.gecimi.com/api/lyric/" + title + '/' + artist,
                 // url: "http://www.gecimi.com/api/lyric/" + title ,
-                url: "http://music.163.com/api/search/get",
+                url: "https://music.163.com/api/search/get",
                 // data: 'type=1&total=true&limit=3&s=' + title,
                 data: {
                     type: 1,
@@ -88,7 +88,7 @@
                     // getting lyrics using 163 api
                     $.ajax({
                         type: 'GET',
-                        url: 'http://music.163.com/api/song/media?id=' + id,
+                        url: 'https://music.163.com/api/song/media?id=' + id,
                         dataType: 'json',
                         success: function (l) {
                             console.log('returned lyrics obj:\n', l)
