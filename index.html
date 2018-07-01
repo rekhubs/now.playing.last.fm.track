@@ -1,61 +1,116 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>playing track</title>
+    <title>playing track</title>
 </head>
 
 <body>
-
-<div id="song-info">
-</div>
-
-
+    <div id="song-info">
+    </div>
+    <div id="lyrics">
+    </div>
 </body>
 
 
 <script src="js/basic.js"></script>
-<script src="https://code.jquery.com/jquery-3.1.0.min.js" ></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 
 <script type="text/javascript">
-console.log("hi, i'm from embedded js tag in index.html");
-console.log("jquery to get h1:",  $("h1")[0] );
+    // TODO - move js code to script file
+    // TODO - sort out api providers, extract functions properly
 
-$.ajax({
-    type : 'POST',
-    url : 'https://ws.audioscrobbler.com/2.0/',
-    data : 'method=user.getrecenttracks&' +
-           'user=ralph4&' +
-           'limit=2&' +
-           'api_key=57ee3318536b23ee81d6b27e36997cde&' +
-           'format=json',
-    dataType : 'jsonp',
-    success : function(data) {
-    	console.log("success! data fetched:", data);
-    	
-    	var firstTrack = data.recenttracks.track[0];
-        console.log("first track is:", firstTrack);
-        
-        var ifPlaying = firstTrack['@attr'];
-        var playingText = "last track:";
-        if ( ifPlaying ) {
-            playingText = "now playing:"
-        }
-        console.log("if playing:", ifPlaying);
-    	
-        var title = firstTrack.name;
-    	var artist = firstTrack.artist["#text"];
-    	console.log("title:", title, "artist:", artist);
+    console.log("hi, i'm from embedded js tag in index.html");
+    console.log("jquery to get h1:", $("h1")[0]);
 
-        // change song display
-        $("#song-info").html(playingText + "<h1>" + title + "</h1>" + "<i>by</i><h1>" + artist + "</h1>"  );
-    },
-    error : function(code, message){
-        // Handle error here
-        console.log("error! error code:", code, ";   error message:", message);
+    function getLyricsByTrackId() {
+
     }
-});
+
+    $.ajax({
+        type: 'GET',
+        url: 'https://ws.audioscrobbler.com/2.0/',
+        data: 'method=user.getrecenttracks&' +
+            'user=ralph4&' +
+            'limit=2&' +
+            'api_key=57ee3318536b23ee81d6b27e36997cde&' +
+            'format=json',
+        dataType: 'jsonp',
+        success: function (data) {
+            console.log("success! data fetched:", data);
+
+            var firstTrack = data.recenttracks.track[0];
+            console.log("first track is:", firstTrack);
+
+            var ifPlaying = firstTrack['@attr'];
+            var playingText = "last track:";
+            if (ifPlaying) {
+                playingText = "now playing:"
+            }
+            console.log("if playing:", ifPlaying);
+
+            var title = firstTrack.name;
+            var artist = firstTrack.artist["#text"];
+            console.log("title:", title, "artist:", artist);
+
+            // change song display
+            $("#song-info").html(playingText + "<h1>" + title + "</h1>" + "<i>by</i><h1>" + artist + "</h1>");
+
+            // lyrics
+            // searching track using 163 api
+            $.ajax({
+                // jQuery.post({
+                type: "POST",
+
+                // url: "http://www.gecimi.com/api/lyric/" + title + '/' + artist,
+                // url: "http://www.gecimi.com/api/lyric/" + title ,
+                url: "http://music.163.com/api/search/get",
+                // data: 'type=1&total=true&limit=3&s=' + title,
+                data: {
+                    type: 1,
+                    total: true,
+                    limit: 3,
+                    s: title + '   ' + artist,
+                },
+                dataType: 'json',
+                headers: {
+                    // Origin: 'http://localhost'
+                },
+                crossDomain: true,
+                // jsonpCallback: 'callback',
+                success: function (data) {
+                    console.log('haha, i got some track hits:', data);
+                    track = data.result.songs[0];
+                    id = track.id;
+                    // id = '523042176';
+                    // netease muisc: A-Mei - 身后 id: 523042176
+
+                    // getting lyrics using 163 api
+                    $.ajax({
+                        type: 'GET',
+                        url: 'http://music.163.com/api/song/media?id=' + id,
+                        dataType: 'json',
+                        success: function (l) {
+                            console.log('returned lyrics obj:\n', l)
+                            console.log('finally, the lyrics!\n\n\n', l.lyric);
+
+                            if (l.lyric) {
+                                $("#lyrics").html(l.lyric.replace(/\[[0-9]+.*[0-9]\]/g, '<br/>'));
+                            }
+                        }
+                    });
+                },
+                error: function (code, msg) {
+                    console.log('error searching track using 163 api: /api/search/get:', code, '\nmsg:', msg);
+                }
+            });
+        },
+        error: function (code, message) {
+            // Handle error here
+            console.log("error! error code:", code, ";   error message:", message);
+        }
+    });
 
 </script>
 
 </html>
-
